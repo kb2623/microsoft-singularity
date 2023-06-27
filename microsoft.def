@@ -5,40 +5,27 @@ From: ubuntu:lunar
 	Maintainer Klemen Berkovic
 	Contact roxor1992@gmail.com
 	Recipe https://github.com/kb2623/microsoft-singularity
-	Tags microsoft, edge, teams
+	Tags microsoft, edge, teams, vscode
 	Version v0.0.1
 
 %post
 	## Install additional programs
-	apt update && apt install -y bash zsh curl git tmux software-properties-common
-	# Install Neovim
-	add-apt-repository ppa:neovim-ppa/unstable
-	apt update && apt install -y neovim universal-ctags
+	apt update && apt install -y bash zsh curl neovim
+	apt update && apt install -y software-properties-common apt-transport-https ca-certificates
 	
-	# Install Edge
-	apt update && apt install -y apt-transport-https software-properties-common
-	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-	add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main"
-	apt update && apt install -y microsoft-edge-dev
-
-	# Install Teams
-	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-	add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/ms-teams stable main"
-	apt update && apt install -y teams
+	# Install Edge 
+	curl -fSsL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/microsoft-edge.gpg > /dev/null
+	echo 'deb [signed-by=/etc/apt/keyrings/microsoft-edge.gpg] https://packages.microsoft.com/repos/edge stable main' | tee /etc/apt/sources.list.d/microsoft-edge.list
+	apt update && apt install -y microsoft-edge-stable
 
 	# Install VSCode
-	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-	add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+	curl -fSsL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | tee /etc/apt/keyrings/vscode.gpg > /dev/null
+	echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/vscode.gpg] https://packages.microsoft.com/repos/code stable main" | tee /etc/apt/sources.list.d/vscode.list
 	apt update && apt install -y code
 
-	## Set default programs
-	# Neovim
-	update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 0
-	update-alternatives --config vi
-	update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 0
-	update-alternatives --config vim
-	update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 0
-	update-alternatives --config editor
+	## Clean
+	apt purge -y apt-transport-https software-properties-common
+	apt autoclean -y && apt autoremove -y
 
 %environment
 	export SHELL=/bin/bash
