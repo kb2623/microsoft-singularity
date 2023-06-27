@@ -26,6 +26,11 @@ From: ubuntu:lunar
 	echo "deb [arch=amd64] https://packages.microsoft.com/repos/ms-teams stable main" > /etc/apt/sources.list.d/teams.list
 	apt update && apt install -y teams
 
+	# Install VSCode
+	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+	add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+	apt update && apt install -y code
+
 	## Set default programs
 	# Neovim
 	update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 0
