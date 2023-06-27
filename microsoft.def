@@ -23,7 +23,7 @@ From: ubuntu:lunar
 
 	# Install Teams
 	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-	echo "deb [arch=amd64] https://packages.microsoft.com/repos/ms-teams stable main" > /etc/apt/sources.list.d/teams.list
+	add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/ms-teams stable main"
 	apt update && apt install -y teams
 
 	# Install VSCode
